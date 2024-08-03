@@ -1,5 +1,3 @@
-version: '3'
-
 services:
   buildroot:
     build:
@@ -8,11 +6,23 @@ services:
     container_name: buildroot-env
     volumes:
       - buildroot_data:/buildroot
+      - ./toolchain-sync:/toolchain:ro
     working_dir: /buildroot
     command: /bin/bash
     tty: true
     environment:
       - DEBIAN_FRONTEND=noninteractive
+
+  sync:
+    image: alpine
+    volumes:
+      - buildroot_data:/source:ro
+      - ./buildroot-sync:/destination
+    command: >
+      sh -c "while true; do 
+        rsync -av --delete /source/ /destination/;
+        sleep 5;
+      done"
 
 volumes:
   buildroot_data:
