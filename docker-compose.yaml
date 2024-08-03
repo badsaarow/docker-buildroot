@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  buildroot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: buildroot-env
+    volumes:
+      - buildroot_data:/buildroot
+    working_dir: /buildroot
+    command: /bin/bash
+    tty: true
+    environment:
+      - DEBIAN_FRONTEND=noninteractive
+
+volumes:
+  buildroot_data:
